@@ -13,6 +13,7 @@ class Complex
 
 		//комплексное сопряжение
 		void conjugate();
+		void pow(unsigned int power);
 
 		//вывод числа
 		void print() const;

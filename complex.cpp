@@ -20,6 +20,15 @@ void Complex::conjugate()
 {
 	_imaginary = -_imaginary;
 }
+void Complex::pow(unsigned int power)
+{
+	Complex result = *this;
+	for(unsigned int iter = 0; iter < power; ++iter)
+	{
+		result *= *this;
+	}
+	*this = result;
+}
 
 void Complex::print() const
 {
