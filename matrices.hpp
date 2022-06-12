@@ -26,6 +26,9 @@ class Matrix
 
 		//устанавливает коэффициент в произвольную позицию
 		void setCoef(unsigned int columnPos, unsigned int rowPos, Complex newCoef);
+
+		//устанавливает тип матрицы
+		void setType(int newType);
 		
 		Matrix operator*(Matrix matrix)
 		{
@@ -33,24 +36,17 @@ class Matrix
 			auto matrixParams = matrix.getOrder();
 			Matrix result(0, std::get<0>(matrixParams), _rowIndex);
 
-			//свитч-кейс немного странный, но на самом деле
-			//перемножаются только:
-			//> квадратные матрицы степени двойки (частный случай на n^2)
-			//> матрица и вектор (очень частный случай)
-			switch(std::get<0>(matrixParams))
+			for(unsigned int lRowIter = 0; lRowIter < _rowIndex; ++lRowIter)
 			{
-				case 1:
-					for(rowIter = 0; rowIter < _rowIndex; ++rowIter)
+				for(unsigned int rColumnIter = 0; rColumnIter < std::get<0>(matrixParams); ++rColumnIter)
+				{
+					Complex sum();
+					for(unsigned int multIter = 0; multIter < _columnIndex; ++multIter)
 					{
-						Complex sum();
-						for(multIter = 0; multIter < _columnIndex; ++multIter)
-						{
-							sum += _coefs[multIter][rowIter] * matrix.getCoef(1, multIter);
-						}
-						result.setCoef(1, rowIter, sum);
+						sum += _coefs[multIter][lRowIter] * matrix[rColumnIter][mulIter];
 					}
-					break;
-				default:
+					result.setCoef(rColumnIter, lRowIter, sum);
+				}
 			}
 		}
 };

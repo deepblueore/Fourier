@@ -30,6 +30,11 @@ void Matrix::setCoef(unsigned int columnPos, unsigned int rowPos, Complex newCoe
 	_coefs[columnPos][rowPos] = newCoef;
 }
 
+void setType(int newType)
+{
+	_type = newType;
+}
+
 Complex Matrix::getCoef(unsigned int columnPos, unsigned int rowPos) const
 {
 	return _coefs[columnPos][rowPos];
