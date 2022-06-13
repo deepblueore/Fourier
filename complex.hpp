@@ -34,6 +34,13 @@ class Complex
 		        return result;
 		}
 
+		Complex operator-(Complex value)
+		{
+			Complex result(this->getRe() - value.getRe(), this->getIm() - value.getIm());
+			result.correctComplex();
+			return result;
+		}
+
 		Complex operator+=(Complex value)
 		{
 			Complex result = *this + value;

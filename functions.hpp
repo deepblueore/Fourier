@@ -4,6 +4,7 @@
 #include <ctime>
 #include <cmath>
 #include "matrices.hpp"
+#include "fourier.hpp"
 
 #define GEN_LIM 10
 #define PI 3.14159265
@@ -18,10 +19,10 @@ Matrix buildFourier(unsigned int order, Complex base);
 Matrix transposeFourier(Matrix& matrix);
 
 //возвращает значение ф(w) для дальнейшей работы с ним
-Complex getFourierPolynom(Matrix& circulant, Complex fourierValue);
+std::vector<Complex> getFourierPolynom(Matrix& circulant, Complex fourierValue);
 
 //возвращает значение полинома ф1(w)
-Complex getSolution(std::vector<Complex>& tmpVector, Complex fourierValue);
+std::vector<Complex> getSolution(std::vector<Complex>& tmpVector, Complex fourierValue);
 
 //солвер циркулянтной системы
 std::vector<Complex> solveCirculant(Matrix& circulant, Matrix& freeColumn);

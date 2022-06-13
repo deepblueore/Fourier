@@ -1,6 +1,8 @@
 all: test
-test: complex.o matrices.o functions.o test.o
-	g++ complex.o test.o matrices.o functions.o -lgmp -lgmpxx -o test
+test: complex.o matrices.o functions.o fourier.o test.o
+	g++ complex.o test.o matrices.o functions.o fourier.o -lgmp -lgmpxx -o test
+fourier.o: fourier.cpp
+	g++ -c fourier.cpp -o fourier.o
 functions.o: functions.cpp
 	g++ -c functions.cpp -o functions.o
 matrices.o: matrices.cpp

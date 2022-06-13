@@ -1,15 +1,5 @@
 #include "functions.hpp"
 
-//вспомогательное взятие модуля
-int abs(int number)
-{
-	if(number >= 0)
-	{
-		return number;
-	}
-	return -number;
-}
-
 Matrix buildMatrix(unsigned int columnIndex, unsigned int rowIndex, int seed)
 {
 	srand(time(NULL)+seed);
@@ -69,24 +59,28 @@ Matrix transposeFourier(Matrix& matrix)
 	return transposed;
 }
 
-Complex getFourierPolynom(Matrix& circulant, Complex fourierValue)
+std::vector<Complex> calculateFourierPolynom(Matrix& circulant)
 {
-	Complex result;
-	for(unsigned int columnIter = 0; columnIter < std::get<0>(circulant.getOrder()); ++columnIter)
+	//выписываем первую строку циркулянта в вектор
+	unsigned int size = std::get<0>(circulant.getOrder());
+	std::vector<Complex> coefs;
+	coefs.resize(size);
+	for(unsigned int columnIter = 0; columnIter < size; ++columnIter)
 	{
-		result = result + circulant.getCoef(columnIter, 0) * fourierValue.pow(columnIter);
+		coefs[columnIter] = circulant.getCoef(columnIter, 0);
 	}
-	return result;
+
+	//преобразуем вектор коэффициентов с помощью БПФ
+	std::vector<Complex> newCoefs = fourierTransform(coefs);
+
+	return newCoefs;
 }
 
-Complex getSolution(Matrix& tmpVector, Complex fourierValue)
+std::vector<Complex> getSolution(std::vector<Complex>& tmpVector)
 {
-        Complex result;
-        for(unsigned int rowIter = 0; rowIter < std::get<1>(tmpVector.getOrder()); ++rowIter)
-        {
-                result = result + tmpVector.getCoef(0, rowIter) * fourierValue.pow(rowIter);
-        }
-        return result;
+	std::vector<Complex> newVector = fourierTransform(tmpVector);
+
+	return newVector;
 }
 
 std::vector<Complex> solveCirculant(Matrix& circulant, Matrix& freeColumn)
@@ -115,25 +109,26 @@ std::vector<Complex> solveCirculant(Matrix& circulant, Matrix& freeColumn)
 	Matrix transFourier = transposeFourier(fourier);
 	Matrix multiplicatedTMP = transFourier * freeColumn;
 
-	//уравнение сводится к x=Fy, для его решения вычислим y
-	Matrix tmpSolved(0, 1, order);
+	//уравнение сводится к x=Fy, для его решения вычислим y - промежуточное уравнение:
+	//1) вычисляем вектор значений полинома ф(w)
+	std::vector<Complex> polynomValues = calculateFourierPolynom(circulant);
+
+	//2) вычисляем промежуточные координаты решения
+	std::vector<Complex> tmpSolved;
+	tmpSolved.resize(order);
 	for(unsigned int tmpIter = 0; tmpIter < order; ++tmpIter)
 	{
-		//вычисляем ф(w^tmpIter)
-		Complex polynomValue = getFourierPolynom(circulant, fourier.getCoef(1, tmpIter));
-
 		//вычисляем координату y
-		Complex a = multiplicatedTMP.getCoef(0, tmpIter);
-		tmpSolved.setCoef(0, tmpIter, multiplicatedTMP.getCoef(0, tmpIter) / polynomValue);
+		tmpSolved[tmpIter] = multiplicatedTMP.getCoef(0, tmpIter) / polynomValues[tmpIter];
 	}
 
 	//теперь отыщем координаты вектора x
 	std::vector<Complex> solution;
 	solution.resize(order);
+	std::vector<Complex> solutionValues = getSolution(tmpSolved);
 	for(unsigned int tmpIter = 0; tmpIter < order; ++tmpIter)
 	{
-		Complex polynomValue = getSolution(tmpSolved, fourier.getCoef(1, tmpIter));
-		solution[tmpIter] = polynomValue / order;
+		solution[tmpIter] = solutionValues[tmpIter] / order;
 	}
 
 	return solution;
