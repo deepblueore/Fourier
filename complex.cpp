@@ -1,5 +1,4 @@
 #include "complex.hpp"
-#include <iostream>
 
 Complex::Complex()
 {
@@ -16,21 +15,21 @@ Complex::Complex(const double re, const double im)
 double Complex::getRe() const{return _real;}
 double Complex::getIm() const{return _imaginary;}
 
-void Complex::conjugate()
+Complex Complex::conjugate()
 {
-	_imaginary = -_imaginary;
+	return Complex(_real, -_imaginary);
 }
-void Complex::pow(unsigned int power)
+Complex Complex::pow(unsigned int power)
 {
 	Complex result = *this;
 	for(unsigned int iter = 0; iter < power; ++iter)
 	{
-		result *= *this;
+		result = *this * result;
 	}
-	*this = result;
+	return result;
 }
 
 void Complex::print() const
 {
-	std::cout << _real << " + " << _imaginary << "*i" << std::endl;
+	std::cout << _real << " + " << _imaginary << "*i ";
 }

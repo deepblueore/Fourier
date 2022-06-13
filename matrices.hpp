@@ -29,6 +29,12 @@ class Matrix
 
 		//устанавливает тип матрицы
 		void setType(int newType);
+
+		//изменяет размер до ближайшей степени двойки
+		void setCorrectSize();
+
+		//распечатывает матрицу
+		void print() const;
 		
 		Matrix operator*(Matrix matrix)
 		{
@@ -40,13 +46,14 @@ class Matrix
 			{
 				for(unsigned int rColumnIter = 0; rColumnIter < std::get<0>(matrixParams); ++rColumnIter)
 				{
-					Complex sum();
+					Complex sum;
 					for(unsigned int multIter = 0; multIter < _columnIndex; ++multIter)
 					{
-						sum += _coefs[multIter][lRowIter] * matrix[rColumnIter][mulIter];
+						sum += _coefs[multIter][lRowIter] * matrix.getCoef(rColumnIter, multIter);
 					}
 					result.setCoef(rColumnIter, lRowIter, sum);
 				}
 			}
+			return result;
 		}
 };
