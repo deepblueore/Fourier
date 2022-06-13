@@ -1,6 +1,6 @@
 all: test
-test: complex.o matrices.o test.o
-	g++ complex.o test.o -lgmp -lgmpxx -o test
+test: complex.o matrices.o functions.o test.o
+	g++ complex.o test.o matrices.o functions.o -lgmp -lgmpxx -o test
 functions.o: functions.cpp
 	g++ -c functions.cpp -o functions.o
 matrices.o: matrices.cpp

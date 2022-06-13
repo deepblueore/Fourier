@@ -9,7 +9,7 @@
 #define PI 3.14159265
 
 //генератор рандомных матриц
-Matrix genMatrix(unsigned int columnIndex, unsigned int rowIndex, int seed);
+Matrix buildMatrix(unsigned int columnIndex, unsigned int rowIndex, int seed);
 
 //генератор матрицы Фурье по некоторому основанию
 Matrix buildFourier(unsigned int order, Complex base);

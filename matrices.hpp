@@ -49,7 +49,7 @@ class Matrix
 					Complex sum;
 					for(unsigned int multIter = 0; multIter < _columnIndex; ++multIter)
 					{
-						sum += _coefs[multIter][lRowIter] * matrix.getCoef(rColumnIter, multIter);
+						sum = sum + _coefs[multIter][lRowIter] * matrix.getCoef(rColumnIter, multIter);
 					}
 					result.setCoef(rColumnIter, lRowIter, sum);
 				}

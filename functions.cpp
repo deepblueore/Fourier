@@ -10,7 +10,7 @@ int abs(int number)
 	return -number;
 }
 
-Matrix genMatrix(unsigned int columnIndex, unsigned int rowIndex, int seed)
+Matrix buildMatrix(unsigned int columnIndex, unsigned int rowIndex, int seed)
 {
 	srand(time(NULL)+seed);
 
@@ -20,7 +20,7 @@ Matrix genMatrix(unsigned int columnIndex, unsigned int rowIndex, int seed)
 	{
 		for(unsigned int rowIter = 0; rowIter < rowIndex; ++rowIter)
 		{
-			Complex tmp(rand()%GEN_LIM, rand()%GEN_LIM);
+			Complex tmp(rand()%GEN_LIM, 0);
 			general.setCoef(columnIter, rowIter, tmp);
 		}
 	}
@@ -72,19 +72,19 @@ Matrix transposeFourier(Matrix& matrix)
 Complex getFourierPolynom(Matrix& circulant, Complex fourierValue)
 {
 	Complex result;
-	for(unsigned int columnIter = 0; columnIter < std::get<0>(circulant.getOrder()); columnIter)
+	for(unsigned int columnIter = 0; columnIter < std::get<0>(circulant.getOrder()); ++columnIter)
 	{
-		result += circulant.getCoef(columnIter, 0) * fourierValue.pow(columnIter);
+		result = result + circulant.getCoef(columnIter, 0) * fourierValue.pow(columnIter);
 	}
 	return result;
 }
 
-Complex getSolution(std::vector<Complex>& tmpVector, Complex fourierValue)
+Complex getSolution(Matrix& tmpVector, Complex fourierValue)
 {
         Complex result;
-        for(unsigned int rowIter = 0; rowIter < tmpVector.size(); rowIter)
+        for(unsigned int rowIter = 0; rowIter < std::get<1>(tmpVector.getOrder()); ++rowIter)
         {
-                result += tmpVector[rowIter] * fourierValue.pow(rowIter);
+                result = result + tmpVector.getCoef(0, rowIter) * fourierValue.pow(rowIter);
         }
         return result;
 }
@@ -125,10 +125,10 @@ std::vector<Complex> solveCirculant(Matrix& circulant, Matrix& freeColumn)
 	//теперь отыщем координаты вектора x
 	std::vector<Complex> solution;
 	solution.resize(order);
-	for(unsigned int tmpIter; tmpIter < order; ++tmpIter)
+	for(unsigned int tmpIter = 0; tmpIter < order; ++tmpIter)
 	{
-		Complex PolynomValue = getSolution(solution, fourier.getCoef(1, tmpIter));
-		solution[tmpIter] = PolynomValue / order;
+		Complex polynomValue = getSolution(tmpSolved, fourier.getCoef(1, tmpIter));
+		solution[tmpIter] = polynomValue / order;
 	}
 
 	return solution;
@@ -151,12 +151,10 @@ Matrix buildCirculant(unsigned int order, int seed)
 	{
 		for(unsigned int rowIter = 0; rowIter < order; ++rowIter)
 		{
-			circulant.setCoef(columnIter, rowIter, elems[columnIter - rowIter]);
+			circulant.setCoef(columnIter, rowIter, elems[abs(columnIter - rowIter)]);
 		}
 	}
 
 	delete[] elems;
 	return circulant;
 }
-
-
