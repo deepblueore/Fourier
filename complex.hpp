@@ -55,12 +55,10 @@ class Complex
 		{
 			double ReResult, ImResult;
 
-			Complex nom(this->getRe(), this->getIm());
-			Complex denomConj(denom.getRe(), denom.getIm());
-			denomConj.conjugate();
-
-			Complex nomResult = nom * denomConj;
+			Complex denomConj = denom.conjugate();
 			double denomResult = (denom * denomConj).getRe();
+			Complex nomResult = *this * denomConj;
+
 			ReResult = nomResult.getRe() / denomResult;
 			ImResult = nomResult.getIm() / denomResult;
 

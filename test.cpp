@@ -6,8 +6,8 @@
 int main()
 {
 	//инициализация СЛУ
-	Matrix circulant = buildCirculant(4, 343);
-	Matrix freeColumn = buildMatrix(1, 4, 547);
+	Matrix circulant = buildCirculant(64, 343);
+	Matrix freeColumn = buildMatrix(1, 64, 547);
 
 	//косметика
 	circulant.print();
@@ -16,6 +16,8 @@ int main()
 	std::cout << std::endl;
 
 	std::vector<Complex> solution = solveCirculant(circulant, freeColumn);
+	std::cout << std::endl;
+	std::cout << "Solution:" << std::endl;
 	for(unsigned int iter = 0; iter < solution.size(); ++iter)
 	{
 		solution[iter].print();

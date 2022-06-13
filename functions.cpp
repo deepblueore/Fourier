@@ -110,6 +110,12 @@ std::vector<Complex> solveCirculant(Matrix& circulant, Matrix& freeColumn)
 	//вычисляем (F*)freeColumn
 	Matrix transFourier = transposeFourier(fourier);
 	Matrix multiplicatedTMP = transFourier * freeColumn;
+	std::cout << "transposed fourier:" << std::endl;
+	transFourier.print();
+	std::cout << std::endl;
+	std::cout << "F* f:" << std::endl;
+	multiplicatedTMP.print();
+	std::cout << std::endl;
 
 	//уравнение сводится к x=Fy, для его решения вычислим y
 	Matrix tmpSolved(0, 1, order);
@@ -117,10 +123,21 @@ std::vector<Complex> solveCirculant(Matrix& circulant, Matrix& freeColumn)
 	{
 		//вычисляем ф(w^tmpIter)
 		Complex polynomValue = getFourierPolynom(circulant, fourier.getCoef(1, tmpIter));
+		std::cout << "ф(y)" << tmpIter << std::endl;
+		polynomValue.print();
+		std::cout << std::endl;
 
 		//вычисляем координату y
+		Complex a = multiplicatedTMP.getCoef(0, tmpIter);
+		a.print();
+		std::cout << std::endl;
+		(a / polynomValue).print();
+		std::cout << std::endl;
 		tmpSolved.setCoef(0, tmpIter, multiplicatedTMP.getCoef(0, tmpIter) / polynomValue);
 	}
+	std::cout << "y:" << std::endl;
+	tmpSolved.print();
+	std::cout << std::endl;
 
 	//теперь отыщем координаты вектора x
 	std::vector<Complex> solution;
@@ -128,6 +145,9 @@ std::vector<Complex> solveCirculant(Matrix& circulant, Matrix& freeColumn)
 	for(unsigned int tmpIter = 0; tmpIter < order; ++tmpIter)
 	{
 		Complex polynomValue = getSolution(tmpSolved, fourier.getCoef(1, tmpIter));
+		std::cout << "x" << tmpIter << std::endl;
+		polynomValue.print();
+		std::cout << std::endl;
 		solution[tmpIter] = polynomValue / order;
 	}
 
