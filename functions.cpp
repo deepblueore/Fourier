@@ -151,7 +151,14 @@ Matrix buildCirculant(unsigned int order, int seed)
 	{
 		for(unsigned int rowIter = 0; rowIter < order; ++rowIter)
 		{
-			circulant.setCoef(columnIter, rowIter, elems[abs(columnIter - rowIter)]);
+			if(columnIter >= rowIter)
+			{
+				circulant.setCoef(columnIter, rowIter, elems[columnIter-rowIter]);
+			}
+			else
+			{
+				circulant.setCoef(columnIter, rowIter, elems[order + columnIter - rowIter]);
+			}
 		}
 	}
 

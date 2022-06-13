@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#define LOWER 0.001
+
 class Complex
 {
 	private:
@@ -16,7 +18,11 @@ class Complex
 		//комплексное сопряжение
 		Complex conjugate();
 
+		//возведение в степень
 		Complex pow(unsigned int power);
+
+		//корректировка погрешностей вычислений
+		void correctComplex();
 
 		//вывод числа
 		void print() const;
@@ -24,12 +30,15 @@ class Complex
 		Complex operator+(Complex value)
 		{
 		        Complex result(this->getRe() + value.getRe(), this->getIm() + value.getIm());
+			result.correctComplex();
 		        return result;
 		}
 
 		Complex operator+=(Complex value)
 		{
-			return (*this + value);
+			Complex result = *this + value;
+			result.correctComplex();
+			return result;
 		}
 
 		Complex operator*(Complex value)
@@ -38,6 +47,7 @@ class Complex
 		        ReResult = this->getRe() * value.getRe() - this->getIm() * value.getIm();
 		        ImResult = this->getRe() * value.getIm() + this->getIm() * value.getRe();
 		        Complex result(ReResult, ImResult);
+			result.correctComplex();
 		        return result;
 		}
 
@@ -54,13 +64,18 @@ class Complex
 			ReResult = nomResult.getRe() / denomResult;
 			ImResult = nomResult.getIm() / denomResult;
 
-			return Complex(ReResult, ImResult);
+			Complex result(ReResult, ImResult);
+			result.correctComplex();
+			return result;
 		}
 
 		Complex operator/(double denom)
 		{
 			double ReResult = this->getRe() / denom;
 			double ImResult = this->getIm() / denom;
+
+			Complex result(ReResult, ImResult);
+			result.correctComplex();
 			return Complex(ReResult, ImResult);
 		}
 
